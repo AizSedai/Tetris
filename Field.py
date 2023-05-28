@@ -17,3 +17,24 @@ class Field:
 
     def is_in_field(self, x, y):
         return 0 <= x < self.field_width and y < self.field_height
+
+    def clear_completed(self):
+        removed_lines = 0
+        y = self.field_height - 1
+        while y >= 0:
+            if self.is_completed(y):
+                for push_down_y in range(y, 0, -1):
+                    for x in range(self.field_width):
+                        self.field_data[x][push_down_y] = self.field_data[x][push_down_y - 1]
+                for x in range(self.field_width):
+                    self.field_data[x][0] = 'o'
+                removed_lines += 1
+            else:
+                y -= 1
+        return removed_lines
+
+    def is_completed(self, y):
+        for x in range(self.field_width):
+            if self.field_data[x][y] == 'o':
+                return False
+        return True
