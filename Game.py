@@ -1,3 +1,5 @@
+import sys
+
 import pygame
 
 from Field import Field
@@ -12,6 +14,7 @@ class Game:
         self.points = 0
         self.level = 1
         self.fall_speed = None
+        self.fps_clock = pygame.time.Clock()
 
     def init_param(self):
         pygame.init()
@@ -20,16 +23,65 @@ class Game:
 
     def run(self):
         is_running = True
-
         self.calc_speed()
-        field = Field()
-        falling_figure = Figure(field.field_width)
-        next_figure = Figure(field.field_width)
+        falling_figure = Figure(self.field.field_width)
+        next_figure = Figure(self.field.field_width)
+        self.pause()
 
         while is_running:
-            pass
+            if falling_figure is None:
+                falling_figure = next_figure
+                next_figure = Figure(self.field.field_width)
+
+                if not self.check_pos(falling_figure):
+                    is_running = False
+                    continue
+            self.quit_game()
+
+            for event in pygame.event.get():
+                if event.type == pygame.KEYUP:
+                    if event.key == pygame.K_SPACE:
+                        self.pause()
 
     def calc_speed(self):
         self.level = int(self.points / 10) + 1
-        self.fall_speed = 0.36 - self.level * 0.02
+        self.fall_speed -= 0.36 - self.level * 0.02
+
+    def check_pos(self, figure, add_x=0, add_y=0):
+        for x in range(figure.figure_width):
+            for y in range(figure.figure_height):
+                is_negative_y = y + figure.y + add_y < 0
+                if is_negative_y or figure.figures[figure.shape][figure.rotation][y][x] == 'o':
+                    continue
+                if not self.field.is_in_field(x + figure.x + add_x, y + figure.y + add_y):
+                    return False
+                if self.field.field_data[x + figure.x + add_x][y + figure.y + add_y] != 'o':
+                    return False
+        return True
+
+    def pause(self):
+        while self.check_keys() is None:
+            pygame.display.update()
+            self.fps_clock.tick()
+
+    def check_keys(self):
+        self.quit_game()
+        for event in pygame.event.get([pygame.KEYDOWN, pygame.KEYUP]):
+            if event.type == pygame.KEYDOWN:
+                continue
+            return event.key
+        return None
+
+    def quit_game(self):
+        for event in pygame.event.get(pygame.QUIT):
+            self.stop_game()
+        for event in pygame.event.get(pygame.KEYUP):
+            if event.key == pygame.K_ESCAPE:
+                self.stop_game()
+            pygame.event.post(event)
+
+    def stop_game(self):
+        pygame.quit()
+        sys.exit()
+
 
