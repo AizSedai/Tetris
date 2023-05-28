@@ -43,6 +43,24 @@ class Game:
                     if event.key == pygame.K_SPACE:
                         self.pause()
 
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_LEFT and self.check_pos(falling_figure, add_x=-1):
+                        falling_figure.x -= 1
+
+                    elif event.key == pygame.K_RIGHT and self.check_pos(falling_figure, add_x=1):
+                        falling_figure.x += 1
+
+                    elif event.key == pygame.K_UP:
+                        falling_figure.rotation = (falling_figure.rotation + 1) \
+                                                     % len(falling_figure.figures[falling_figure.shape])
+                        if not self.check_pos(falling_figure):
+                            falling_figure.rotation = (falling_figure.rotation - 1) \
+                                                         % len(falling_figure.figures[falling_figure.shape])
+
+                    elif event.key == pygame.K_DOWN:
+                        if self.check_pos(falling_figure, add_y=1):
+                            falling_figure.y += 1
+
     def calc_speed(self):
         self.level = int(self.points / 10) + 1
         self.fall_speed -= 0.36 - self.level * 0.02
@@ -83,5 +101,3 @@ class Game:
     def stop_game(self):
         pygame.quit()
         sys.exit()
-
-
