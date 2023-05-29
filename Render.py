@@ -84,3 +84,13 @@ class Render:
 
     def convert_coordinate(self, block_x, block_y):
         return (self.side_margin + (block_x * self.block)), (self.top_margin + (block_y * self.block))
+
+    def show_pause_text(self, text):
+        title_surface = self.tetris_font.render(text, True, self.title_color)
+        title_rect = title_surface.get_rect()
+        title_rect.center = (int(self.win_width / 2) - 3, int(self.win_height / 2) - 3)
+        self.screen.blit(title_surface, title_rect)
+        fps_clock = pygame.time.Clock()
+        pygame.display.update()
+        fps_clock.tick()
+

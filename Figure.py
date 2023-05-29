@@ -2,7 +2,7 @@ import random
 
 
 class Figure:
-    def __init__(self, field_width):
+    def __init__(self, field_width, colors):
         self.field_width = field_width
         self.figure_width = 5
         self.figure_height = 5
@@ -106,4 +106,4 @@ class Figure:
         self.rotation = random.randint(0, len(self.figures[self.shape]) - 1)
         self.x = int(self.field_width / 2) - int(self.figure_width / 2)
         self.y = -2
-        self.color = random.randint(0, len(self.colors) - 1)
+        self.color = random.randint(0, len(colors) - 1)

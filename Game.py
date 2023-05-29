@@ -22,6 +22,7 @@ class Game:
         pygame.init()
         self.render = Render(600, 500)
         pygame.display.set_caption('Тетрис')
+        self.render.show_pause_text('Нажмите любую клавишу для начала игры')
 
     def run(self):
         is_running = True
