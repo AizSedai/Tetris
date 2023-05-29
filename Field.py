@@ -5,11 +5,11 @@ class Field:
         self.block_size = 20
         self.field_data = [['o'] * self.field_height for _ in range(0, self.field_width)]
 
-    def add_to_field(self, fig):
-        for x in range(fig.fig_w):
-            for y in range(fig.fig_h):
-                if fig.figures[fig.shape][fig.rotation][y][x] != 'o':
-                    self.field_data[x + fig.x][y + fig.y] = fig.color
+    def add_to_field(self, figure):
+        for x in range(figure.figure_width):
+            for y in range(figure.figure_height):
+                if figure.figures[figure.shape][figure.rotation][y][x] != 'o':
+                    self.field_data[x + figure.x][y + figure.y] = figure.color
 
     def create_empty_field(self):
         for i in range(self.field_width):

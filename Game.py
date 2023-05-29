@@ -16,24 +16,25 @@ class Game:
         self.level = 1
         self.fall_speed = None
         self.fps_clock = pygame.time.Clock()
+        self.fps = 25
 
     def init_param(self):
         pygame.init()
-        self.render = Render()
+        self.render = Render(600, 500)
         pygame.display.set_caption('Тетрис')
 
     def run(self):
         is_running = True
         self.calc_speed()
-        falling_figure = Figure(self.field.field_width)
-        next_figure = Figure(self.field.field_width)
+        falling_figure = Figure(self.field.field_width, self.render.colors)
+        next_figure = Figure(self.field.field_width, self.render.colors)
         time_last_fall = time.time()
         self.pause()
 
         while is_running:
             if falling_figure is None:
                 falling_figure = next_figure
-                next_figure = Figure(self.field.field_width)
+                next_figure = Figure(self.field.field_width, self.render.colors)
                 time_last_fall = time.time()
 
                 if not self.check_pos(falling_figure):
@@ -74,6 +75,16 @@ class Game:
                 else:
                     falling_figure.y += 1
                     time_last_fall = time.time()
+
+            self.render.fill_bg()
+            self.render.draw_title()
+            self.render.draw_field(self.field)
+            self.render.draw_info(self.points, self.level)
+            self.render.draw_next_figure(next_figure)
+            if falling_figure is not None:
+                self.render.draw_figure(falling_figure)
+            pygame.display.update()
+            self.fps_clock.tick(self.fps)
 
     def calc_speed(self):
         self.level = int(self.points / 10) + 1
